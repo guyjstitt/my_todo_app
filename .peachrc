@@ -1,0 +1,10 @@
+{
+  "key": "my_todo_app",
+  "framework": {
+    "angular5": {
+      "module": "AppModule",
+      "root_selector": "app-root",
+      "version": "6.0.3"
+    }
+  }
+}

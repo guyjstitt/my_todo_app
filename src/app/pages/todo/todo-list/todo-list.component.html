@@ -1,0 +1,27 @@
+<beyond-page id="todo-list-page">
+  <beyond-page-header title="TODO List">
+    
+  </beyond-page-header>
+
+  <beyond-progressbar [value]="percentComplete"></beyond-progressbar>
+
+  <beyond-card title="Tasks" [formGroup]="formGroup">
+    <div formArrayName="tasks">
+      <div *ngFor="let task of formGroup.get('tasks').controls; let i=index">
+        <div [formGroupName]="i" class="task-container">
+          <mat-checkbox formControlName="is_complete"
+            [disableRipple]="true"
+            [aria-label]="task.description">
+          </mat-checkbox>
+
+          <div [ngClass]="{'line-through': task.isComplete}">
+              <div>
+                  <b>{{ task.get('description').value }}</b>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </beyond-card>
+</beyond-page>
+
