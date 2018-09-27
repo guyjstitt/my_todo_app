@@ -1,9 +1,11 @@
-import { Task } from './../../../shared/task/task.model';
+import { TaskService } from './../../../shared/services/task/task.service';
 import { TodoService } from './../todo.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BeyondService } from '@getbeyond/ng-beyond-js';
 import { Observable, Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { Task } from '../../../shared/models/task.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-todo-list',
@@ -17,7 +19,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
   constructor(
     private todoService: TodoService,
-    private fb: FormBuilder
+    private taskService: TaskService,
+    private fb: FormBuilder,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -25,14 +29,14 @@ export class TodoListComponent implements OnInit, OnDestroy {
       tasks: this.fb.array([])
     });
 
-    this.getTaskSub = this.todoService.getTasks().subscribe((tasks) => {
+    this.getTaskSub = this.taskService.load().subscribe((tasks) => {
       for (const task of tasks) {
 
         const formGroup = Task.asFormGroup(task);
 
         this.subscriptions.add(
           formGroup.valueChanges.subscribe((value: Task) => {
-            this.todoService.saveTask(value);
+            this.taskService.save(value);
           })
         );
 
@@ -44,5 +48,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.getTaskSub.unsubscribe();
     this.subscriptions.unsubscribe();
+  }
+
+  actionOpenTaskModal(taskId: string | number = 'new'): void {
+    this.router.navigate(['todo/task', taskId]);
   }
 }

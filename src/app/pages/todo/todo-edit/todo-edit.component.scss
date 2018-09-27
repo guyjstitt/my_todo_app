@@ -1,0 +1,8 @@
+.todo-form-container {
+  display: grid;
+  grid-template-columns: 1fr;
+
+  mat-form-field, mat-checkbox {
+    width: 50%;
+  }
+}

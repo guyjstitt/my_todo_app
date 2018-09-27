@@ -1,0 +1,108 @@
+<beyond-modal
+  [title]="title"
+  [loading]="blockers.initializing"
+  (close)="actionClose()"
+  id="todo-edit-page">
+
+    <beyond-modal-content *ngIf="!blockers.initializing && editedTask">
+      <beyond-message
+        *ngIf="info.message"
+        [type]="info.type">
+          {{ info.message }}
+      </beyond-message>
+
+      <div class="todo-form-container" [formGroup]="formGroup">
+          <mat-form-field>
+            <textarea 
+              matInput 
+              formControlName="description" 
+              placeholder="description"
+              matTextareaAutosize
+              name="description"
+              placeholder="Description"
+              aria-label="Description"
+              maxlength="256"></textarea>
+        
+            <mat-error *ngIf="formGroup.get('description').hasError('required')">
+              Description is <strong>required</strong>
+            </mat-error>
+        
+            <mat-error *ngIf="formGroup.get('description').hasError('maxlength')">
+              Description can be max 256 characters long
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select
+              name="user"
+              placeholder="Assigned User"
+              aria-label="Assigned User"
+              formControlName="assigned_user_id">
+                <mat-option>None</mat-option>
+                <mat-option
+                  *ngFor="let user of accountUsers"
+                  [value]="user?.id">
+                    {{ user?.username }}
+                </mat-option>
+            </mat-select>
+        
+            <mat-error *ngIf="formGroup.get('assigned_user_id').hasError('required')">
+              Task must be assigned to a user
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input
+            matInput
+            formControlName="due_date"
+            name="dueDate"
+            placeholder="Due Date"
+            aria-label="Due Date"
+            [matDatepicker]="dueDate"
+            [min]="currentDate">
+              
+            <mat-datepicker-toggle matSuffix [for]="dueDate"></mat-datepicker-toggle>
+            <mat-datepicker #dueDate></mat-datepicker>
+          </mat-form-field>
+        
+          <mat-checkbox
+            formControlName="is_complete"
+            name="isComplete"
+            aria-label="Is Complete">
+              Is Complete
+          </mat-checkbox>
+        </div>
+    </beyond-modal-content>
+
+    <beyond-modal-footer *ngIf="!blockers.initializing && editedTask">
+      <span>
+        <button
+          *ngIf="editedTask && editedTask.id"
+          (click)="actionConfirmDeleteTask()"
+          [disabled]="blockers.api_processing"
+          mat-button
+          class="beyond-btn urgent-btn"
+          aria-label="Delete">
+            Delete
+        </button>
+      </span>
+
+      <span>
+        <button
+          (click)="actionClose()"
+          [disabled]="blockers.api_processing"
+          mat-button
+          class="beyond-btn text-btn"
+          aria-label="Cancel">
+            Cancel
+        </button>
+
+        <button
+          (click)="actionConfirmSaveTask()"
+          [disabled]="disableSaveButton()"
+          mat-button
+          class="beyond-btn basic-btn"
+          aria-label="Save">
+            Save
+        </button>
+      </span>
+    </beyond-modal-footer>
+</beyond-modal>

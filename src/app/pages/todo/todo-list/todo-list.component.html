@@ -1,6 +1,11 @@
 <beyond-page id="todo-list-page">
   <beyond-page-header title="TODO List">
-    
+    <button
+      (click)="actionOpenTaskModal('new')"
+      mat-button
+      class="beyond-btn">
+        Add Task
+    </button>
   </beyond-page-header>
 
   <beyond-progressbar [value]="percentComplete"></beyond-progressbar>
@@ -11,13 +16,23 @@
         <div [formGroupName]="i" class="task-container">
           <mat-checkbox formControlName="is_complete"
             [disableRipple]="true"
-            [aria-label]="task.description">
+            [aria-label]="task.get('description').value">
           </mat-checkbox>
 
           <div [ngClass]="{'line-through': task.isComplete}">
               <div>
                   <b>{{ task.get('description').value }}</b>
               </div>
+          </div>
+
+          <div class="btn-container">
+            <button
+              (click)="actionOpenTaskModal(task.get('id').value)"
+              mat-button
+              class="beyond-btn text-btn"
+              aria-label="Edit task">
+                Edit
+            </button>
           </div>
         </div>
       </div>
