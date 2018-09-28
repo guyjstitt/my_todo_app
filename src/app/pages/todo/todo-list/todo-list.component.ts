@@ -21,9 +21,6 @@ export class TodoListComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private getTaskSub: Subscription;
 
-  private userInfo$: Observable<any> = this.permissionsService.userInfo$;
-  private userInfoSub: Subscription;
-
   constructor(
     private todoService: TodoService,
     private taskService: TaskService,
