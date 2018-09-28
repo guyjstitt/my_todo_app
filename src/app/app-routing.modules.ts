@@ -1,17 +1,28 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { PermissionsResolver } from './core/resolvers/permissions.resolver';
 
 const appRoutes: Routes = [
   {
     path: '',
-    loadChildren: './pages/home/home.module#HomeModule' },
+    loadChildren: './pages/home/home.module#HomeModule',
+    resolve: {
+      permissions: PermissionsResolver
+    }
+  },
   {
     path: 'home',
-    loadChildren: './pages/home/home.module#HomeModule'
+    loadChildren: './pages/home/home.module#HomeModule',
+    resolve: {
+      permissions: PermissionsResolver
+    }
   },
   {
     path: 'todo',
-    loadChildren: './pages/todo/todo.module#TodoModule'
+    loadChildren: './pages/todo/todo.module#TodoModule',
+    resolve: {
+      permissions: PermissionsResolver
+    }
   },
   {
     path: '**',

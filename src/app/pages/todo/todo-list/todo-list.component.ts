@@ -1,3 +1,4 @@
+import { PermissionsService } from './../../../core/services/permissions.service';
 import { TaskService } from './../../../shared/services/task/task.service';
 import { TodoService } from './../todo.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -5,7 +6,8 @@ import { BeyondService } from '@getbeyond/ng-beyond-js';
 import { Observable, Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Task } from '../../../shared/models/task.model';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Permission } from '../../../shared/models/permission.model';
 
 @Component({
   selector: 'app-todo-list',
@@ -13,23 +15,41 @@ import { Router } from '@angular/router';
   styleUrls: ['./todo-list.component.scss']
 })
 export class TodoListComponent implements OnInit, OnDestroy {
+  public permissions: Permission = null;
+  public canEdit: boolean;
   public formGroup: FormGroup;
   private subscriptions = new Subscription();
   private getTaskSub: Subscription;
+
+  private userInfo$: Observable<any> = this.permissionsService.userInfo$;
+  private userInfoSub: Subscription;
 
   constructor(
     private todoService: TodoService,
     private taskService: TaskService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private permissionsService: PermissionsService
   ) {}
 
   ngOnInit() {
+    this.route.data.subscribe((data) => {
+      this.permissions = data && data.permissions;
+
+      if (this.permissions) {
+        this.canEdit = this.permissions.todo_admin;
+      }
+    });
+
     this.formGroup = this.fb.group({
       tasks: this.fb.array([])
     });
 
-    this.getTaskSub = this.taskService.load().subscribe((tasks) => {
+    const userId = this.permissionsService.userInfo && this.permissionsService.userInfo['id'];
+    const filters = !this.canEdit ? { assigned_user_id: userId } : null;
+
+    this.getTaskSub = this.taskService.load(filters).subscribe((tasks) => {
       for (const task of tasks) {
 
         const formGroup = Task.asFormGroup(task);

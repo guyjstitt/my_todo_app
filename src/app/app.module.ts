@@ -1,3 +1,4 @@
+import { CoreModule } from './core/core.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
@@ -13,7 +14,8 @@ import { AppRoutingModule } from './app-routing.modules';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NgBeyondModule.forRoot()
+    NgBeyondModule.forRoot(),
+    CoreModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -42,7 +42,7 @@ export class TaskService {
       description: payload.description,
       is_complete: payload.is_complete,
       assigned_user_id: payload.assigned_user_id,
-      due_date: moment(payload.due_date).format('YYYY-MM-DD'),
+      due_date: payload.due_date,
       location_id: 1
     };
 
@@ -52,7 +52,7 @@ export class TaskService {
 
     // before sending to database, we need to replace user object data back with the user id
     if (moment.isDate(payload.due_date)) {
-      payload.due_date = moment(payload.due_date).format('YYYY-MM-DD');
+      dbObject.due_date = moment(payload.due_date).format('YYYY-MM-DD');
     }
 
     return dbObject;
